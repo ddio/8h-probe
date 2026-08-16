@@ -39,6 +39,7 @@
 
 - `docs/cases/` — 案例紀錄（成案與婉拒）
 - `docs/research/` — 市場研究
+- `docs/posts/` — 社群貼文草稿與定稿
 - `docs/service-page/` — 服務說明頁發想
 - `docs/tools/` — 小工具發想
 
