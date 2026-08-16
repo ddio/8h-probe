@@ -1,0 +1,5 @@
+# Seed prompt contains internal scheduling parameters; keep it local only.
+docs/seed-prompt.md
+
+# Local drafts: only finalized documents get committed (git history is public and permanent).
+docs/**/drafts/
