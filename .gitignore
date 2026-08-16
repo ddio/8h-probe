@@ -3,3 +3,6 @@ docs/seed-prompt.md
 
 # Local drafts: only finalized documents get committed (git history is public and permanent).
 docs/**/drafts/
+
+# Site build tooling
+node_modules/

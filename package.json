@@ -1,0 +1,16 @@
+{
+  "name": "8h-probe-site",
+  "private": true,
+  "description": "Build tooling for the 8h-probe one-page site (Tailwind CSS + display font subsetting)",
+  "type": "module",
+  "scripts": {
+    "build:css": "tailwindcss -i src/site.css -o assets/site.css --minify",
+    "build:font": "node scripts/subset-display-font.mjs",
+    "build": "npm run build:font && npm run build:css"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "subset-font": "^2.4.0",
+    "tailwindcss": "^4.1.0"
+  }
+}
