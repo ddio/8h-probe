@@ -20,63 +20,28 @@
 }
 
 @layer components {
-  /* 簽名元素：✂ 裁切虛線。時間邊界是這個服務的規格母題。 */
-  .cutline {
-    position: relative;
-    height: 0;
-    border-top: 2px dashed var(--color-pencil);
-    opacity: 0.75;
+  /* 分隔線：一條鉛筆色細線。每節左上以等寬編號標示，像規格書。 */
+  .rule {
+    border: 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-pencil) 55%, transparent);
+    margin: 0;
   }
-  .cutline::before {
-    content: "✂";
-    position: absolute;
-    left: 0;
-    top: -0.05rem;
-    transform: translateY(-50%);
-    background: var(--color-paper);
-    padding-inline-end: 0.6rem;
+  .sec-num {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
     color: var(--color-pencil);
-    font-size: 1.35rem;
-    line-height: 1;
   }
 
-  /* 「超時怎麼辦」前的虛線被真的剪開 */
-  .cutline--open {
-    border-top: 0;
-    display: flex;
-    align-items: center;
-    gap: 0;
-    height: auto;
-  }
-  .cutline--open::before {
-    position: static;
-    transform: none;
-    background: transparent;
-    padding-inline: 0.6rem;
-  }
-  .cutline--open .cut-half {
-    flex: 1;
-    border-top: 2px dashed var(--color-pencil);
-    transition: transform 0.7s ease;
-  }
-  .cutline--open .cut-l { order: -1; }
-  .cutline--open.is-cut .cut-l { transform: rotate(-1.5deg) translateY(-4px); }
-  .cutline--open.is-cut .cut-r { transform: rotate(1.8deg) translateY(5px); }
-  @media (prefers-reduced-motion: reduce) {
-    .cutline--open .cut-half { transition: none; }
-  }
-
-  /* 剪下來的紙片 */
-  .slip {
+  /* 需要獨立成塊的段落（超時、不需要 AI）：白底、細框，不歪斜 */
+  .note {
     background: #ffffff;
-    border: 2px dashed color-mix(in srgb, var(--color-pencil) 70%, transparent);
+    border: 1px solid rgb(43 43 40 / 0.14);
     border-radius: 0.75rem;
     padding: 1.75rem;
-    transform: rotate(-0.6deg);
-    box-shadow: 0 2px 10px rgb(43 43 40 / 0.06);
   }
   @media (min-width: 768px) {
-    .slip { padding: 2.25rem; }
+    .note { padding: 2.25rem; }
   }
 
   .spec-card {
