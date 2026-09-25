@@ -88,7 +88,7 @@ function esc(s) {
 // ---------- markdown → article ----------
 
 function splitFrontMatter(src) {
-  // Title = first H1; kicker = first non-empty line after it when it is a single bold-led line.
+  // Title = first H1; kicker = the single short line right after it (e.g. "組織型態｜2026-09"), if any.
   const lines = src.split('\n');
   let title = '', kicker = '', i = 0;
   for (; i < lines.length; i++) {
@@ -96,8 +96,9 @@ function splitFrontMatter(src) {
     if (m) { title = m[1].trim(); i++; break; }
   }
   while (i < lines.length && lines[i].trim() === '') i++;
-  if (i < lines.length && /^\*\*[^*]+\*\*/.test(lines[i]) && lines[i + 1]?.trim() === '') {
-    kicker = lines[i].replace(/\*\*/g, '').trim();
+  const cand = lines[i]?.trim() ?? '';
+  if (cand && cand.length <= 60 && !/^[#!>\-|]/.test(cand) && lines[i + 1]?.trim() === '') {
+    kicker = cand.replace(/\*\*/g, '');
     i++;
   }
   return { title, kicker, body: lines.slice(i).join('\n') };
