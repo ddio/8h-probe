@@ -231,7 +231,7 @@ async function buildCasesIndex(cases) {
     : '        <li class="text-pencil">還沒有刊出的紀錄。</li>';
   const html = layout({
     title: '案例紀錄',
-    description: '每一次服務的公開紀錄，包含成案與婉拒兩類。',
+    description: '每一次服務的公開紀錄。組織名稱與可識別的細節依對方的意願匿名。',
     url: '/cases/', current: 'cases',
     body: `    <header class="pt-12 md:pt-16">
       <h1 class="font-display text-3xl leading-snug text-steel md:text-4xl">案例紀錄</h1>
