@@ -6,7 +6,7 @@
 //     https://github.com/justfont/open-huninn-font/releases/download/v2.1/jf-openhuninn-2.1.ttf
 //   OPENHUNINN_TTF=/tmp/openhuninn.ttf npm run build:font
 
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
 import subsetFont from 'subset-font';
 
 const srcPath = process.env.OPENHUNINN_TTF;
@@ -15,10 +15,17 @@ if (!srcPath) {
   process.exit(1);
 }
 
-const html = await readFile('index.html', 'utf8');
-// Keep every character that appears on the page, plus basic ASCII for safety.
+// Keep every character that appears on any page: the home page, the case write-ups,
+// and the page templates (nav labels, headings), plus basic ASCII for safety.
+// Markdown only contributes its heading lines: body text renders in Noto Sans TC.
+let text = (await readFile('index.html', 'utf8')) + (await readFile('scripts/build-pages.mjs', 'utf8'));
+for (const f of await readdir('docs/cases')) {
+  if (!f.endsWith('.md')) continue;
+  const mdText = await readFile(`docs/cases/${f}`, 'utf8');
+  text += mdText.split('\n').filter((l) => /^#{1,3}\s/.test(l)).join('\n');
+}
 const ascii = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('');
-const text = html + ascii;
+text += ascii;
 
 const ttf = await readFile(srcPath);
 const woff2 = await subsetFont(ttf, text, { targetFormat: 'woff2' });

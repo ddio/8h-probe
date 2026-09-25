@@ -35,15 +35,10 @@ jobs:
         run: >
           curl -fsSL -o /tmp/openhuninn.ttf
           https://github.com/justfont/open-huninn-font/releases/download/v2.1/jf-openhuninn-2.1.ttf
-      - name: Build CSS and font subset
+      - name: Build font subset, CSS and pages into _site
         run: npm run build
         env:
           OPENHUNINN_TTF: /tmp/openhuninn.ttf
-      - name: Assemble site
-        run: |
-          mkdir -p _site
-          cp index.html CNAME _site/
-          cp -r assets _site/assets
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

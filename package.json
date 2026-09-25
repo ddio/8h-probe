@@ -1,15 +1,19 @@
 {
   "name": "8h-probe-site",
   "private": true,
-  "description": "Build tooling for the 8h-probe one-page site (Tailwind CSS + display font subsetting)",
+  "description": "Build tooling for the 8h-probe site (Tailwind CSS, display font subsetting, case pages from markdown)",
   "type": "module",
   "scripts": {
     "build:css": "tailwindcss -i src/site.css -o assets/site.css --minify",
     "build:font": "node scripts/subset-display-font.mjs",
-    "build": "npm run build:font && npm run build:css"
+    "build:pages": "node scripts/build-pages.mjs",
+    "build": "npm run build:font && npm run build:css && npm run build:pages",
+    "preview": "python3 -m http.server 8087 --directory _site"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.0",
+    "markdown-it": "^15.0.2",
+    "sharp": "^0.35.4",
     "subset-font": "^2.4.0",
     "tailwindcss": "^4.1.0"
   }
