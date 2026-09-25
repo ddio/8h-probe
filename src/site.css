@@ -133,8 +133,9 @@
     color: var(--color-pencil);
   }
   .article__body figure + p:has(> em:only-child) em { font-style: normal; }
-  /* 文末斜體備註（編修紀錄等） */
-  .article__body hr ~ p, .article__body hr ~ ul { font-size: 0.875rem; line-height: 1.8; color: var(--color-pencil); }
+  /* 文末整段斜體的署名行 */
+  .article__body > p:last-child:has(> em:only-child) { margin-top: 3rem; font-size: 0.875rem; line-height: 1.8; color: var(--color-pencil); }
+  .article__body > p:last-child:has(> em:only-child) em { font-style: normal; }
 
   /* 案例索引 */
   .case-list { display: grid; gap: 1.5rem; }

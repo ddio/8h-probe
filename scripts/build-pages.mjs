@@ -188,7 +188,9 @@ async function buildCase(file) {
   const src = await readFile(path.join(CASES_DIR, file), 'utf8');
   const { title, kicker, body } = splitFrontMatter(src);
   const description = summary(firstParagraph(body));
-  const { html: withImages, firstImage } = await renderImages(body, CASES_DIR, outDir, url);
+  // The trailing 編修紀錄 (edit log) stays in the markdown for the record but is not part of the web page.
+  const webBody = body.replace(/\n---\s*\n\s*\*編修紀錄\*[\s\S]*$/, '\n');
+  const { html: withImages, firstImage } = await renderImages(webBody, CASES_DIR, outDir, url);
   const article = restorePictures(md.render(withImages));
   const { published, modified } = articleDates(body);
 
