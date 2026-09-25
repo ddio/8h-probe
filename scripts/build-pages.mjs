@@ -32,7 +32,27 @@ function nav(current) {
     </nav>`;
 }
 
-function layout({ title, description, url, current, body }) {
+const DEFAULT_IMAGE = { src: '/assets/og-default.png', width: 1200, height: 630 };
+
+function socialMeta({ title, description, url, type, image = DEFAULT_IMAGE, published, modified }) {
+  const tags = [
+    `<meta property="og:site_name" content="8h-probe">`,
+    `<meta property="og:locale" content="zh_TW">`,
+    `<meta property="og:title" content="${esc(title)}">`,
+    `<meta property="og:description" content="${esc(description)}">`,
+    `<meta property="og:type" content="${type}">`,
+    `<meta property="og:url" content="${SITE_URL}${url}">`,
+    `<meta property="og:image" content="${SITE_URL}${image.src}">`,
+    `<meta property="og:image:width" content="${image.width}">`,
+    `<meta property="og:image:height" content="${image.height}">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
+  ];
+  if (published) tags.push(`<meta property="article:published_time" content="${published}">`);
+  if (modified) tags.push(`<meta property="article:modified_time" content="${modified}">`);
+  return tags.join('\n  ');
+}
+
+function layout({ title, description, url, current, body, type = 'website', image, published, modified }) {
   return `<!doctype html>
 <html lang="zh-Hant-TW">
 <head>
@@ -40,10 +60,7 @@ function layout({ title, description, url, current, body }) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${esc(title)} — 8h-probe</title>
   <meta name="description" content="${esc(description)}">
-  <meta property="og:title" content="${esc(title)} — 8h-probe">
-  <meta property="og:description" content="${esc(description)}">
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="${SITE_URL}${url}">
+  ${socialMeta({ title, description, url, type, image, published, modified })}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -91,6 +108,29 @@ function firstParagraph(mdBody) {
   return (para || '').replace(/\*\*|\*|`/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
 }
 
+// Share-card description: whole sentences from the first paragraph, stopping once past ~60 chars.
+function summary(text, min = 60, max = 110) {
+  const parts = text.split(/(?<=[。！？])/);
+  let out = '';
+  for (const p of parts) {
+    if (out.length >= min) break;
+    if ((out + p).length > max && out) break;
+    out += p;
+  }
+  return (out || text).slice(0, max);
+}
+
+// Dates from the trailing 編修紀錄 list: the newest entry is the modification date,
+// the entry that mentions 刊出 (publication) is the publication date.
+function articleDates(mdBody) {
+  const log = mdBody.split(/\*編修紀錄\*/)[1] || '';
+  const entries = [...log.matchAll(/^- (\d{4}-\d{2}-\d{2})：(.*)$/gm)].map((m) => ({ date: m[1], text: m[2] }));
+  if (!entries.length) return {};
+  const modified = entries[0].date;
+  const published = (entries.find((e) => /刊出/.test(e.text)) || entries[0]).date;
+  return { published, modified };
+}
+
 async function renderImages(body, srcDir, outDir, urlBase) {
   // Replace ![alt](file.png) with <picture> pointing at generated webp + the original as fallback.
   const re = /!\[([^\]]*)\]\(([^)\s]+)\)/g;
@@ -102,13 +142,20 @@ async function renderImages(body, srcDir, outDir, urlBase) {
     return token;
   });
   let out = html;
+  let first = null;
   for (const job of jobs) {
     const src = path.join(srcDir, job.file);
     const base = job.file.replace(/\.[^.]+$/, '');
+    await mkdir(outDir, { recursive: true });
     const img = sharp(src);
     const meta = await img.metadata();
     const w = meta.width, h = meta.height;
-    await mkdir(outDir, { recursive: true });
+    if (!first) {
+      // Share card: crop the top of the first image to 1200×630 so platforms don't centre-crop a tall screenshot.
+      const card = `${base}-og.png`;
+      await sharp(src).resize(1200, 630, { fit: 'cover', position: 'top' }).png({ compressionLevel: 9 }).toFile(path.join(outDir, card));
+      first = { src: `${urlBase}${card}`, width: 1200, height: 630 };
+    }
     await sharp(src).webp({ quality: 82 }).toFile(path.join(outDir, `${base}.webp`));
     const small = w > SMALL_WIDTH;
     if (small) await sharp(src).resize({ width: SMALL_WIDTH }).webp({ quality: 80 }).toFile(path.join(outDir, `${base}-${SMALL_WIDTH}.webp`));
@@ -122,7 +169,7 @@ async function renderImages(body, srcDir, outDir, urlBase) {
       `<img src="${urlBase}${job.file}" width="${w}" height="${h}" loading="lazy" decoding="async" alt="${esc(job.alt)}"></picture>`;
     out = out.replace(job.token, `\n\n<!--picture-->${picture}<!--/picture-->\n\n`);
   }
-  return out;
+  return { html: out, firstImage: first };
 }
 
 function restorePictures(html) {
@@ -139,12 +186,14 @@ async function buildCase(file) {
   const outDir = path.join(OUT, 'cases', slug);
   const src = await readFile(path.join(CASES_DIR, file), 'utf8');
   const { title, kicker, body } = splitFrontMatter(src);
-  const description = firstParagraph(body).slice(0, 140);
-  const withImages = await renderImages(body, CASES_DIR, outDir, url);
+  const description = summary(firstParagraph(body));
+  const { html: withImages, firstImage } = await renderImages(body, CASES_DIR, outDir, url);
   const article = restorePictures(md.render(withImages));
+  const { published, modified } = articleDates(body);
 
   const html = layout({
-    title, description, url, current: 'cases',
+    title, description, url, current: 'cases', type: 'article',
+    image: firstImage || undefined, published, modified,
     body: `    <article class="article">
       <header class="pt-12 md:pt-16">
         ${kicker ? `<p class="kicker">${esc(kicker)}</p>` : ''}
