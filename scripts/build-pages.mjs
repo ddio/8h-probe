@@ -134,6 +134,23 @@ function summary(text, min = 60, max = 110) {
   return (out || text).slice(0, max);
 }
 
+// Citations: blockquote attribution lines of the form
+//   > —— Author，〈[Title](url)〉，Publisher，date
+// become schema.org CreativeWork entries; lines that don't match are kept as plain text.
+function citations(mdBody) {
+  const out = [];
+  for (const m of mdBody.matchAll(/^>\s*——\s*(.+)$/gm)) {
+    const line = m[1].trim();
+    const st = /^(.+?)，〈\[(.+?)\]\((\S+?)\)〉，(.+?)，(.+?)(?:（.*）)?$/.exec(line);
+    if (st) {
+      const date = st[5].trim().replace(/^(\d{4}) 年 (\d{1,2}) 月$/, (_, y, mo) => `${y}-${mo.padStart(2, '0')}`);
+      out.push({ '@type': 'CreativeWork', author: st[1], name: st[2], url: st[3], publisher: st[4], datePublished: date });
+    }
+    else out.push(line.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1'));
+  }
+  return out;
+}
+
 // Dates from the trailing 編修紀錄 list: the newest entry is the modification date,
 // the entry that mentions 刊出 (publication) is the publication date.
 function articleDates(mdBody) {
@@ -206,6 +223,7 @@ async function buildCase(file) {
   const { html: withImages, firstImage } = await renderImages(webBody, CASES_DIR, outDir, url);
   const article = restorePictures(md.render(withImages));
   const { published, modified } = articleDates(body);
+  const cites = citations(body);
 
   const kickerHtml = [kicker ? esc(kicker) : '', published ? `刊出 <time datetime="${published}">${published}</time>` : '']
     .filter(Boolean).join('｜');
@@ -224,6 +242,7 @@ async function buildCase(file) {
     isPartOf: { '@id': WEBSITE_ID },
     license: 'https://creativecommons.org/licenses/by/4.0/',
     ...(firstImage ? { image: `${SITE_URL}${firstImage.src}` } : {}),
+    ...(cites.length ? { citation: cites } : {}),
   };
   const html = layout({
     title, description, url, current: 'cases', type: 'article',
