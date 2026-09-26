@@ -163,6 +163,20 @@
     padding: 1.25rem;
   }
 
+  /* 幾種可能的走法 */
+  .paths { display: grid; gap: 1rem; align-items: start; }
+  @media (min-width: 768px) { .paths { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .path-card {
+    background: rgb(255 255 255 / 0.6);
+    border: 1px solid rgb(43 43 40 / 0.14);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+  }
+  .path-card__tag { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; color: var(--color-pencil); }
+  .path-card__tag--case { color: var(--color-glue); }
+  .path-card dl { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; row-gap: 0.5rem; font-size: 0.875rem; line-height: 1.7; }
+  .path-card dt { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--color-pencil); padding-top: 0.2rem; }
+
   .spec-card {
     background: rgb(255 255 255 / 0.6);
     border: 1px solid rgb(43 43 40 / 0.14);
