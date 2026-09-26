@@ -252,9 +252,14 @@ ${list}
 
 async function buildHome(cases) {
   let html = await readFile(path.join(ROOT, 'index.html'), 'utf8');
-  const latest = cases.slice(0, 3).map((c) =>
-    `        <li><a class="link-steel" href="${c.url}">${esc(c.title)}</a>${c.kicker ? `<span class="ml-3 font-mono text-xs text-pencil">${esc(c.kicker)}</span>` : ''}</li>`).join('\n');
-  html = html.replace('<!-- cases:latest -->', latest ? `<ul class="mt-6 space-y-3">\n${latest}\n      </ul>` : '');
+  const latest = cases.slice(0, 3).map((c) => `        <li>
+          <a class="case-link" href="${c.url}">
+            ${c.kicker ? `<span class="kicker">${esc(c.kicker)}</span>` : ''}
+            <span class="case-link__title font-display text-xl text-steel">${esc(c.title)}</span>
+            <span class="case-link__desc">${esc(c.description)}</span>
+          </a>
+        </li>`).join('\n');
+  html = html.replace('<!-- cases:latest -->', latest ? `<ul class="case-list mt-8">\n${latest}\n      </ul>` : '');
   html = html.replace('<!-- site:nav -->', nav('home'));
   await writeFile(path.join(OUT, 'index.html'), html);
 }
