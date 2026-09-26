@@ -6,17 +6,38 @@
   --color-steel: #3B5B75;
   --color-glue: #E07A3F;
   --color-pencil: #8A8F87;
-  --font-display: "jf-openhuninn", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Noto Sans TC", ui-sans-serif, system-ui, "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-display: "jf-openhuninn", "jf-openhuninn Fallback", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Noto Sans TC", "Noto Sans TC Fallback", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
+/* 顯示字型：optional——時限內沒到就這次用系統字、不中途換字；下次造訪快取命中 */
 @font-face {
   font-family: "jf-openhuninn";
   src: url("fonts/jf-openhuninn-subset.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
+}
+
+/*
+ * 備用字型的垂直度量對齊正式字型（hhea ascent/descent），
+ * 用系統字時行高一致，之後換成正式字型也不位移。方塊字寬度本來就是 1em。
+ * 粉圓：upm 1024、ascent 871、descent 153；Noto Sans TC：upm 1000、ascent 1160、descent 288。
+ */
+@font-face {
+  font-family: "jf-openhuninn Fallback";
+  src: local("PingFang TC"), local("Microsoft JhengHei"), local("Noto Sans CJK TC");
+  ascent-override: 85.1%;
+  descent-override: 14.9%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Noto Sans TC Fallback";
+  src: local("PingFang TC"), local("Microsoft JhengHei"), local("Noto Sans CJK TC");
+  ascent-override: 116%;
+  descent-override: 28.8%;
+  line-gap-override: 0%;
 }
 
 @layer components {
