@@ -101,7 +101,14 @@ function splitFrontMatter(src) {
     kicker = cand.replace(/\*\*/g, '');
     i++;
   }
-  return { title, kicker, body: lines.slice(i).join('\n') };
+  // Optional hand-written summary: a line starting with 摘要：, used for the index and share cards, not shown in the article.
+  let summaryLine = '';
+  while (i < lines.length && lines[i].trim() === '') i++;
+  if (/^摘要：/.test(lines[i]?.trim() ?? '')) {
+    summaryLine = lines[i].trim().replace(/^摘要：/, '');
+    i++;
+  }
+  return { title, kicker, summaryLine, body: lines.slice(i).join('\n') };
 }
 
 function firstParagraph(mdBody) {
@@ -186,8 +193,8 @@ async function buildCase(file) {
   const url = `/cases/${slug}/`;
   const outDir = path.join(OUT, 'cases', slug);
   const src = await readFile(path.join(CASES_DIR, file), 'utf8');
-  const { title, kicker, body } = splitFrontMatter(src);
-  const description = summary(firstParagraph(body));
+  const { title, kicker, summaryLine, body } = splitFrontMatter(src);
+  const description = summaryLine || summary(firstParagraph(body));
   // The trailing 編修紀錄 (edit log) stays in the markdown for the record but is not part of the web page.
   const webBody = body.replace(/\n---\s*\n\s*\*編修紀錄\*[\s\S]*$/, '\n');
   const { html: withImages, firstImage } = await renderImages(webBody, CASES_DIR, outDir, url);
