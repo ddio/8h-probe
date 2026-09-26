@@ -145,6 +145,24 @@
   .case-link__desc { font-size: 0.95rem; line-height: 1.8; color: color-mix(in srgb, var(--color-ink) 80%, var(--color-pencil)); }
   .case-link:focus-visible { outline: 3px solid var(--color-glue); outline-offset: 4px; border-radius: 0.25rem; }
 
+  /* 可能的結局：分岔圖（桌機）＋卡片 */
+  .branches svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .branches__lines { stroke: color-mix(in srgb, var(--color-pencil) 80%, transparent); }
+  .branches__node rect { fill: #ffffff; stroke: var(--color-steel); stroke-width: 1.5; }
+  .branches__node text { font-family: var(--font-display); font-size: 15px; fill: var(--color-steel); }
+  .branches__end circle { fill: var(--color-steel); }
+  .branches__end text { font-family: var(--font-display); font-size: 15px; fill: var(--color-steel); }
+  .branches__end .branches__sub { font-family: var(--font-body); font-size: 12px; fill: var(--color-pencil); }
+  .outcomes { display: grid; gap: 1rem; align-items: start; }
+  @media (min-width: 640px) { .outcomes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 768px) { .outcomes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .outcome-card {
+    background: rgb(255 255 255 / 0.6);
+    border: 1px solid rgb(43 43 40 / 0.14);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+  }
+
   .spec-card {
     background: rgb(255 255 255 / 0.6);
     border: 1px solid rgb(43 43 40 / 0.14);

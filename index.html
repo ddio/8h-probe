@@ -89,13 +89,56 @@
       <p class="sec-num mt-8">03</p>
       <h2 class="mt-2 font-display text-2xl text-steel">可能的結局</h2>
       <p class="mt-5 leading-loose">過程不綁死，結局也不只一種。下面五種都算成功，因為每一種都讓你們帶著方向離開，而不是帶著半個成品。</p>
-      <!-- outcomes:diagram -->
-      <ul class="mt-8 space-y-4">
-        <li><strong>可以直接用。</strong>雛形已經夠好，加一點整理就能開始用。</li>
-        <li><strong>方向對了，還要打磨。</strong>要撐得起實際使用人數、例外狀況與長期維護，通常還需要幾個月的實作；哪些該做、大概多少工，會寫清楚。</li>
-        <li><strong>該由你們內部的人接手。</strong>做出來的東西與文件完全交給你們，附一份界線說明：哪些可以放心自己用、自己改，哪些一旦碰到個資、開始對外服務、或變成每天依賴的工具，就值得把專業角色拉進來。</li>
-        <li><strong>不需要 AI。</strong>有時候驗證到一半會發現，這件事用一般的軟體開發、甚至只是改一張表單就能解決。這種情況我會直接說，並且把該怎麼做、大概要多少工的判斷交給你們。它替你們省下的，比一套做出來的系統多。</li>
-        <li><strong>比想像中大。</strong>如果做到一半發現問題規模明顯超過 8 小時，我不會假裝做得完，也不會自行延長、另外加價。剩下的時間會拿來整理「8 小時之後，你們可以怎麼繼續」：哪些已經確認、哪些還沒驗證、下一步可以找誰或用什麼方式接手。</li>
+      <figure class="branches mt-10 hidden md:block" aria-labelledby="branches-title">
+        <svg viewBox="0 0 640 300" role="img" aria-labelledby="branches-title">
+          <title id="branches-title">從開場出發的五條路：比想像中大、不需要 AI，或做出雛形後直接能用、還要打磨、內部接手</title>
+          <g class="branches__lines" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M104 150 H136"/>
+            <path d="M136 150 V34 H348"/>
+            <path d="M136 150 V94 H348"/>
+            <path d="M136 150 V210 H176"/>
+            <path d="M296 210 H320 V154 H348"/>
+            <path d="M320 210 H348"/>
+            <path d="M320 210 V270 H348"/>
+          </g>
+          <g class="branches__node">
+            <rect x="0" y="130" width="104" height="40" rx="8"/>
+            <text x="52" y="155" text-anchor="middle">開場會議</text>
+          </g>
+          <g class="branches__node">
+            <rect x="176" y="190" width="120" height="40" rx="8"/>
+            <text x="236" y="215" text-anchor="middle">做出雛形</text>
+          </g>
+          <g class="branches__end">
+            <circle cx="348" cy="34" r="3"/><text x="362" y="30">比想像中大</text><text class="branches__sub" x="362" y="48">停下來，整理之後怎麼繼續</text>
+            <circle cx="348" cy="94" r="3"/><text x="362" y="90">不需要 AI</text><text class="branches__sub" x="362" y="108">說清楚該怎麼做、大概多少工</text>
+            <circle cx="348" cy="154" r="3"/><text x="362" y="150">可以直接用</text><text class="branches__sub" x="362" y="168">加一點整理就能開始</text>
+            <circle cx="348" cy="210" r="3"/><text x="362" y="206">方向對了，還要打磨</text><text class="branches__sub" x="362" y="224">還需要幾個月的實作，範圍寫清楚</text>
+            <circle cx="348" cy="270" r="3"/><text x="362" y="266">由你們內部的人接手</text><text class="branches__sub" x="362" y="284">東西與文件全交給你們，附界線說明</text>
+          </g>
+        </svg>
+      </figure>
+      <ul class="outcomes mt-8">
+        <li class="outcome-card">
+          <h3 class="font-display text-lg text-steel">比想像中大</h3>
+          <p class="mt-2 text-sm leading-relaxed">如果做到一半發現問題規模明顯超過 8 小時，我不會假裝做得完，也不會自行延長、另外加價。剩下的時間拿來整理：哪些已經確認、哪些還沒驗證、下一步可以找誰或怎麼接手。</p>
+        </li>
+        <li class="outcome-card">
+          <h3 class="font-display text-lg text-steel">不需要 AI</h3>
+          <p class="mt-2 text-sm leading-relaxed">有時候驗證到一半會發現，這件事用一般的軟體開發、甚至只是改一張表單就能解決。我會直接說，並把該怎麼做、大概多少工的判斷交給你們。它替你們省下的，比一套做出來的系統多。</p>
+        </li>
+        <li class="outcome-card">
+          <h3 class="font-display text-lg text-steel">可以直接用</h3>
+          <p class="mt-2 text-sm leading-relaxed">雛形已經夠好，加一點整理就能開始用。</p>
+        </li>
+        <li class="outcome-card">
+          <h3 class="font-display text-lg text-steel">方向對了，還要打磨</h3>
+          <p class="mt-2 text-sm leading-relaxed">要撐得起實際使用人數、例外狀況與長期維護，通常還需要幾個月的實作。哪些該做、大概多少工，會寫清楚。</p>
+        </li>
+        <li class="outcome-card">
+          <h3 class="font-display text-lg text-steel">由你們內部的人接手</h3>
+          <p class="mt-2 text-sm leading-relaxed">做出來的東西與文件完全交給你們，附一份界線說明：哪些可以放心自己用、自己改，哪些一旦碰到個資、對外服務、或變成每天依賴的工具，就值得把專業角色拉進來。</p>
+        </li>
       </ul>
     </section>
 
