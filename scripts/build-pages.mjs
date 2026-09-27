@@ -26,7 +26,7 @@ export const NAV_LABELS = { brand: '8h-probe', home: '服務說明', cases: '案
 function nav(current) {
   const link = (href, label, key) =>
     `<a href="${href}"${current === key ? ' aria-current="page"' : ''}>${label}</a>`;
-  return `<nav class="site-nav wide" aria-label="主導覽">
+  return `<nav class="site-nav" aria-label="主導覽">
       <a class="site-nav__brand" href="/">${NAV_LABELS.brand}</a>
       <div class="site-nav__links">${link('/', NAV_LABELS.home, 'home')}${link('/cases/', NAV_LABELS.cases, 'cases')}</div>
     </nav>`;
