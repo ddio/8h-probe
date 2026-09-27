@@ -65,6 +65,16 @@
     .note { padding: 2.25rem; }
   }
 
+  /* 破欄：閱讀欄維持 max-w-2xl，卡片、圖、頂欄可以撐到 64rem，置中；小螢幕自動退回欄寬 */
+  .wide {
+    width: min(64rem, calc(100vw - 3rem));
+    margin-inline: calc(50% - min(32rem, 50vw - 1.5rem));
+  }
+  .wide-md {
+    width: min(52rem, calc(100vw - 3rem));
+    margin-inline: calc(50% - min(26rem, 50vw - 1.5rem));
+  }
+
   /* 頂欄：三頁共用 */
   .site-nav {
     display: flex;
@@ -139,6 +149,7 @@
     border-radius: 0.3rem;
   }
   .article__body figure { margin-block: 2.5rem 0; }
+  @media (min-width: 1024px) { .article__body figure { width: min(52rem, calc(100vw - 3rem)); margin-inline: calc(50% - min(26rem, 50vw - 1.5rem)); } }
   .article__body figure img {
     display: block;
     width: 100%;
@@ -177,6 +188,8 @@
   .outcomes { display: grid; gap: 1rem; align-items: start; }
   @media (min-width: 640px) { .outcomes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 768px) { .outcomes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .outcomes { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+  .branches svg { max-width: 44rem; margin-inline: auto; }
   .outcome-card {
     background: rgb(255 255 255 / 0.6);
     border: 1px solid rgb(43 43 40 / 0.14);
@@ -185,7 +198,7 @@
   }
 
   /* 幾種可能的走法 */
-  .paths { display: grid; gap: 1rem; align-items: start; }
+  .paths { display: grid; gap: 1.25rem; align-items: start; }
   @media (min-width: 768px) { .paths { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .path-card {
     background: rgb(255 255 255 / 0.6);
